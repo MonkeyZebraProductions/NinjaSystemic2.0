@@ -11,7 +11,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] public float JumpSpeed = 5f;
     [SerializeField] public int MaxJumps = 1;
 
-    private Vector2 move;
+    public GameObject SelectedWeapon;
+
+    public Transform LootTarget;
+
+    public Camera camera;
+
+    private Vector2 move,look;
 
     private bool _isGrounded,_isJumping;
 
@@ -42,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(move);
+        Debug.Log(look);
 
         if(_isGrounded)
         {
@@ -53,6 +59,15 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         move = inputs.Player.Move.ReadValue<Vector2>();
+        Vector3 mousePosition = inputs.Player.Look.ReadValue<Vector2>();
+        //LootTarget.transform.position = new Vector3(look.x, look.y, 0);
+
+        mousePosition.z = 20;
+        mousePosition = camera.ScreenToWorldPoint(mousePosition);
+        mousePosition.z = 0;
+        LootTarget.position = mousePosition;
+
+        SelectedWeapon.transform.LookAt(LootTarget.transform, Vector2.up);
         _rb2D.velocity = new Vector2(move.x * MovementSpeed, 0);
 
         if (_isJumping == true)
