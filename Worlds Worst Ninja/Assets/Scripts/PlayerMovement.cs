@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(look);
+        Debug.Log(LootTarget.position);
 
         if(_isGrounded)
         {
@@ -67,7 +67,8 @@ public class PlayerMovement : MonoBehaviour
         mousePosition.z = 0;
         LootTarget.position = mousePosition;
 
-        SelectedWeapon.transform.LookAt(LootTarget.transform, Vector2.up);
+        
+        //SelectedWeapon.transform.LookAt(LootTarget.transform, Vector2.up);
         _rb2D.velocity = new Vector2(move.x * MovementSpeed, 0);
 
         if (_isJumping == true)
