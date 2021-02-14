@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyHearing : MonoBehaviour
 {
-    [Header("If disabled, hearing range will be shown only when the enemy is selected")]
     public bool alwaysShowHearingRange = true;
 
     public float hearingRange = 10f;

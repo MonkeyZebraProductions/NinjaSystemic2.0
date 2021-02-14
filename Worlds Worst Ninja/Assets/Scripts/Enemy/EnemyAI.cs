@@ -35,6 +35,8 @@ public class EnemyAI : MonoBehaviour
     private RaycastHit2D raycastHit;
     private float jumpDist = 1.5f;
 
+    [HideInInspector] public bool goingRight = false;
+
     private void Start()
     {
         if(targetPos == null)
@@ -115,7 +117,6 @@ public class EnemyAI : MonoBehaviour
         }
 
         // Directional Graphics Handling and checking for obstacles
-
         Vector3 raycastOffset = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
 
         if (directionLookEnabled)
@@ -138,12 +139,16 @@ public class EnemyAI : MonoBehaviour
                 transform.localScale = new Vector3(-1f * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
                 raycastHit = Physics2D.Raycast(raycastOffset, Vector3.right, jumpDist, obstacleLayer);
                 Debug.DrawRay(raycastOffset, Vector3.right * jumpDist, rayColor);
+
+                goingRight = true;
             }
             else if (rb.velocity.x < -0.05f)
             {
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
                 raycastHit = Physics2D.Raycast(raycastOffset, -Vector3.right, jumpDist, obstacleLayer);
                 Debug.DrawRay(raycastOffset, -Vector3.right * jumpDist, rayColor);
+
+                goingRight = false;
             }
         }
 
