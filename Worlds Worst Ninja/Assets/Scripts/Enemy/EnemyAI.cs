@@ -6,7 +6,8 @@ using Pathfinding;
 public class EnemyAI : MonoBehaviour
 {
     [Header("Pathfinding")]
-    public Transform target;
+    public Transform targetPos;
+    private Vector3 target;
     public float activateDist = 5f;
     public float pathUpdateSeconds = 1f;
     public LayerMask obstacleLayer;
@@ -36,17 +37,35 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
+        if(targetPos == null)
+        {
+            target = transform.position;
+        }
+        else
+        {
+            target = targetPos.position;
+        }
+
         seeker = GetComponent<Seeker>();
         rb = GetComponent<Rigidbody2D>();
 
         InvokeRepeating("UpdatePath", 0f, pathUpdateSeconds);
     }
 
+    private void Update()
+    {
+        if (targetPos != null)
+            target = targetPos.position;
+    }
+
     private void FixedUpdate()
     {
-        if(TargetInDistance() && followEnabled)
+        if(target != null)
         {
-            PathFollow();
+            if (TargetInDistance() && followEnabled)
+            {
+                PathFollow();
+            }
         }
     }
 
@@ -54,7 +73,7 @@ public class EnemyAI : MonoBehaviour
     {
         if (followEnabled && TargetInDistance() && seeker.IsDone())
         {
-            seeker.StartPath(rb.position, target.position, OnPathComplete);
+            seeker.StartPath(rb.position, target, OnPathComplete);
         }
     }
 
@@ -81,7 +100,7 @@ public class EnemyAI : MonoBehaviour
         {
             if (obstacleInFront)
             {
-                rb.AddForce(Vector2.up * speed * jumpModifier);
+                rb.AddForce(Vector2.up * jumpModifier);
             }
         }
 
@@ -132,7 +151,10 @@ public class EnemyAI : MonoBehaviour
 
     private bool TargetInDistance()
     {
-        return Vector2.Distance(transform.position, target.transform.position) < activateDist;
+        if (target != null)
+            return Vector2.Distance(transform.position, target) < activateDist;
+        else
+            return false;
     }
 
     private void OnPathComplete(Path p)
@@ -142,5 +164,10 @@ public class EnemyAI : MonoBehaviour
             path = p;
             currentWaypoint = 0;
         }
+    }
+
+    public void StoreTargetPos(Transform soundTarget)
+    {
+        target = new Vector3(soundTarget.position.x, soundTarget.position.y, soundTarget.position.z);
     }
 }
