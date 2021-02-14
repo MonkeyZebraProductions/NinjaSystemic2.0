@@ -9,6 +9,12 @@ public class Arrow : MonoBehaviour
 
     public Transform LookTarget;
 
+    public float angle;
+
+    public Vector2 dir;
+
+    
+
     private void Awake()
     {
         inputs = new Controls();
@@ -23,10 +29,12 @@ public class Arrow : MonoBehaviour
     void Update()
     {
         Vector3 mousePosition = inputs.Player.Look.ReadValue<Vector2>();
+
+        Debug.Log(mousePosition);
         var pos = Camera.main.WorldToScreenPoint(transform.position);
-        var dir =  mousePosition- pos;
-        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(angle-90, Vector3.forward);
+        dir =  mousePosition- pos;
+        angle = (Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg)-90;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
     private void OnEnable()

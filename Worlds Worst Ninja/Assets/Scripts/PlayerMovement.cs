@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 move,look;
 
-    private bool _isGrounded,_isJumping;
+    private bool _isGrounded,_isJumping,_canFire;
 
     private float _jumpMultiplyer = 1;
 
@@ -29,26 +29,31 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D _rb2D;
 
+    private Arrow arrow;
+
     void Awake()
     {
         inputs = new Controls();
         
         inputs.Player.Jump.started += context => Jump();
         inputs.Player.Jump.canceled += context => JumpCancel();
-       
+        inputs.Player.Fire.started += context => Fire();
+        inputs.Player.Fire.canceled += context => FireCancel();
     }
 
     // Start is called before the first frame update
     void Start()
     {
         _rb2D = GetComponent<Rigidbody2D>();
+        arrow = FindObjectOfType<Arrow>();
         _jumps = MaxJumps;
+        _canFire = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(LootTarget.position);
+       
 
         if(_isGrounded)
         {
@@ -61,6 +66,8 @@ public class PlayerMovement : MonoBehaviour
         move = inputs.Player.Move.ReadValue<Vector2>();
         Vector3 mousePosition = inputs.Player.Look.ReadValue<Vector2>();
         //LootTarget.transform.position = new Vector3(look.x, look.y, 0);
+
+        //Debug.Log(mousePosition);
 
         mousePosition.z = 20;
         mousePosition = camera.ScreenToWorldPoint(mousePosition);
@@ -80,6 +87,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 _isJumping = false;
             }
+        }
+
+        if(_canFire==true)
+        {
+            _rb2D.AddForce(new Vector2(arrow.dir.x, arrow.dir.y) * 10f * -1f);
         }
     }
 
@@ -101,6 +113,17 @@ public class PlayerMovement : MonoBehaviour
     private void JumpCancel()
     {
         _jumpMultiplyerRate = 0.5f;
+    }
+
+    private void Fire()
+    {
+        _canFire = true;
+        
+    }
+
+    private void FireCancel()
+    {
+        _canFire = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collider2D)
