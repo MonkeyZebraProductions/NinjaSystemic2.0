@@ -383,6 +383,7 @@ MonoBehaviour:
   SelectedWeapon: {fileID: 1564531474}
   LootTarget: {fileID: 89497079}
   camera: {fileID: 519420031}
+  sprite: {fileID: 1093524214}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,7 +669,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 2
 --- !u!61 &1439728002
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -755,6 +756,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LookTarget: {fileID: 89497079}
+  angle: 0
+  WhatIsGround:
+    serializedVersion: 2
+    m_Bits: 256
+  dir: {x: 0, y: 0}
+  Debris: {fileID: 5102625141868924924, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
 --- !u!1 &1687340039
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,3 +844,64 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &5102625142175845889
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5102625141868923905, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.405
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868923905, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.641
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868923905, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.2367573
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868923905, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868923905, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868923905, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868923905, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868923905, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868923905, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868923905, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868923905, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868924924, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_Name
+      value: Debris
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102625141868924924, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: db288428ddc0d064997b0bd01fb2e321, type: 3}

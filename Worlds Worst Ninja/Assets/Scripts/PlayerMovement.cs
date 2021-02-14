@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 move,look;
 
-    private bool _isGrounded,_isJumping,_canFire;
+    private bool _isGrounded,_isJumping,_canFire,_isVisable;
 
     private float _jumpMultiplyer = 1;
 
@@ -30,6 +30,9 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D _rb2D;
 
     private Arrow arrow;
+
+    public SpriteRenderer sprite;
+    private Color colour;
 
     void Awake()
     {
@@ -48,14 +51,18 @@ public class PlayerMovement : MonoBehaviour
         arrow = FindObjectOfType<Arrow>();
         _jumps = MaxJumps;
         _canFire = false;
+
+        
+
+        colour = sprite.color;
     }
 
     // Update is called once per frame
     void Update()
     {
-       
-
-        if(_isGrounded)
+        
+        
+        if (_isGrounded)
         {
             _jumps = MaxJumps;
         }
@@ -67,7 +74,6 @@ public class PlayerMovement : MonoBehaviour
         Vector3 mousePosition = inputs.Player.Look.ReadValue<Vector2>();
         //LootTarget.transform.position = new Vector3(look.x, look.y, 0);
 
-        //Debug.Log(mousePosition);
 
         mousePosition.z = 20;
         mousePosition = camera.ScreenToWorldPoint(mousePosition);
@@ -91,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
 
         if(_canFire==true)
         {
-            _rb2D.AddForce(new Vector2(arrow.dir.x, arrow.dir.y) * 10f * -1f);
+            _rb2D.AddForce(new Vector2(arrow.dir.x, arrow.dir.y) * 50f * -1f);
         }
     }
 
@@ -133,6 +139,12 @@ public class PlayerMovement : MonoBehaviour
             _isGrounded = true;
             _jumpMultiplyer = 1f;
         }
+        if (collider2D.gameObject.layer == 10)
+        {
+            _isVisable = true;
+            colour = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0.5f);
+            sprite.color = colour;
+        }
         //if (collider2D.gameObject.tag == "RightWall")
         //{
         //    _isRightWalled = true;
@@ -149,6 +161,12 @@ public class PlayerMovement : MonoBehaviour
         {
             _isGrounded = false;
             _jumps-=1;
+        }
+        if (collider2D.gameObject.layer == 10)
+        {
+            _isVisable = false;
+            colour = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 1f);
+            sprite.color = colour;
         }
         //if (collider2D.gameObject.tag == "RightWall")
         //{
