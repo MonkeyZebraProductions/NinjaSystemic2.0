@@ -8,7 +8,8 @@ public class EnemyAI : MonoBehaviour
     [Header("Pathfinding")]
     public Transform target;
     public float activateDist = 5f;
-    public float pathUpdateSeconds = 0.5f;
+    public float pathUpdateSeconds = 1f;
+    public LayerMask obstacleLayer;
 
     [Header("Physics")]
     public float speed = 3f;
@@ -27,6 +28,11 @@ public class EnemyAI : MonoBehaviour
     private bool isGrounded = false;
     private Seeker seeker;
     private Rigidbody2D rb;
+
+    // Checking for obstacles
+    private bool obstacleInFront;
+    private RaycastHit2D raycastHit;
+    private float jumpDist = 1.5f;
 
     private void Start()
     {
@@ -61,9 +67,10 @@ public class EnemyAI : MonoBehaviour
         if (currentWaypoint >= path.vectorPath.Count)
             return;
 
-        // See if colliding with anything
+        // See if Grounded
         Vector3 startOffset = transform.position - new Vector3(0f, GetComponent<Collider2D>().bounds.extents.y + jumpCheckOffset);
         isGrounded = Physics2D.Raycast(startOffset, -Vector3.up, 0.05f);
+
 
         // Directional Calculation
         Vector2 direction = ((Vector2)path.vectorPath[currentWaypoint] - rb.position).normalized;
@@ -72,7 +79,7 @@ public class EnemyAI : MonoBehaviour
         // Jump
         if(jumpEnabled && isGrounded)
         {
-            if(direction.y > jumpNodeHeightRequirement)
+            if (obstacleInFront)
             {
                 rb.AddForce(Vector2.up * speed * jumpModifier);
             }
@@ -88,18 +95,39 @@ public class EnemyAI : MonoBehaviour
             currentWaypoint++;
         }
 
-        // Directional Graphics Handling
+        // Directional Graphics Handling and checking for obstacles
+
+        Vector3 raycastOffset = new Vector3(transform.position.x, transform.position.y - 1f, transform.position.z);
+
         if (directionLookEnabled)
         {
+            Color rayColor;
+
+            if (raycastHit.collider != null)
+            {
+                rayColor = Color.green;
+                obstacleInFront = true;
+            }
+            else
+            {
+                rayColor = Color.red;
+                obstacleInFront = false;
+            }
+
             if (rb.velocity.x > 0.05f)
             {
                 transform.localScale = new Vector3(-1f * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+                raycastHit = Physics2D.Raycast(raycastOffset, Vector3.right, jumpDist, obstacleLayer);
+                Debug.DrawRay(raycastOffset, Vector3.right * jumpDist, rayColor);
             }
             else if (rb.velocity.x < -0.05f)
             {
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+                raycastHit = Physics2D.Raycast(raycastOffset, -Vector3.right, jumpDist, obstacleLayer);
+                Debug.DrawRay(raycastOffset, -Vector3.right * jumpDist, rayColor);
             }
         }
+
     }
 
     private bool TargetInDistance()
