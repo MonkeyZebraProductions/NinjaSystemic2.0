@@ -19,7 +19,7 @@ public class Arrow : MonoBehaviour
 
     private bool _hitground;
 
-    public GameObject Debris;
+    public GameObject Debris,Sound;
 
     private RaycastHit2D _hit;
 
@@ -74,9 +74,11 @@ public class Arrow : MonoBehaviour
 
     private void CreateDebris()
     {
+        Instantiate(Sound, transform.position, Quaternion.identity);
         if(_hitground==true)
         {
             Instantiate(Debris, _hit.point, Quaternion.identity);
+            Instantiate(Sound, _hit.point, Quaternion.identity);
         }
         
         

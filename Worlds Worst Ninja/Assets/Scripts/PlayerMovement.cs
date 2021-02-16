@@ -19,7 +19,9 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 move,look;
 
-    private bool _isGrounded,_isJumping,_canFire,_isVisable;
+    private bool _isGrounded,_isJumping,_canFire;
+
+    public bool IsVisable;
 
     private float _jumpMultiplyer = 1;
 
@@ -51,17 +53,12 @@ public class PlayerMovement : MonoBehaviour
         arrow = FindObjectOfType<Arrow>();
         _jumps = MaxJumps;
         _canFire = false;
-
-        
-
         colour = sprite.color;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-        
         if (_isGrounded)
         {
             _jumps = MaxJumps;
@@ -84,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
         //SelectedWeapon.transform.LookAt(LootTarget.transform, Vector2.up);
         _rb2D.velocity = new Vector2(move.x * MovementSpeed, 0);
 
+        //checks if jump button was pressed
         if (_isJumping == true)
         {
 
@@ -95,6 +93,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+        //Checks if holding fire button
         if(_canFire==true)
         {
             _rb2D.AddForce(new Vector2(arrow.dir.x, arrow.dir.y) * 50f * -1f);
@@ -108,14 +107,13 @@ public class PlayerMovement : MonoBehaviour
             _isJumping = true;
             _jumpMultiplyer = 1f;
             _jumpMultiplyerRate = 0.9f;
-
-            
-                _jumps -= 1;
-            
+            _jumps -= 1;           
         }
        
     }
 
+
+    //Checks if Jump button is let go
     private void JumpCancel()
     {
         _jumpMultiplyerRate = 0.5f;
@@ -127,6 +125,7 @@ public class PlayerMovement : MonoBehaviour
         
     }
 
+    //Checks if Fire button is let go
     private void FireCancel()
     {
         _canFire = false;
@@ -141,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (collider2D.gameObject.layer == 10)
         {
-            _isVisable = true;
+            IsVisable = true;
             colour = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0.5f);
             sprite.color = colour;
         }
@@ -155,6 +154,16 @@ public class PlayerMovement : MonoBehaviour
         //}
     }
 
+    private void OnTriggerStay2D(Collider2D collider2D)
+    {
+        if (collider2D.gameObject.layer == 10)
+        {
+            IsVisable = true;
+            colour = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0.5f);
+            sprite.color = colour;
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collider2D)
     {
         if (collider2D.gameObject.layer == 8)
@@ -164,7 +173,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (collider2D.gameObject.layer == 10)
         {
-            _isVisable = false;
+            IsVisable = false;
             colour = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 1f);
             sprite.color = colour;
         }

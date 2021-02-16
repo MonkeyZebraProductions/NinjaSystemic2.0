@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5102625141868924926}
   - component: {fileID: 5102625141868924927}
   - component: {fileID: 5102625141868923904}
+  - component: {fileID: 1212900834213391810}
   m_Layer: 10
   m_Name: Debris
   m_TagString: Untagged
@@ -131,3 +132,16 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1212900834213391810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5102625141868924924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 930ef5db51a903444bec3e891bd9e96e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Duration: 5
