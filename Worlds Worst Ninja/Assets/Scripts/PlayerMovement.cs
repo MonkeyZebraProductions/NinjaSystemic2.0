@@ -131,6 +131,15 @@ public class PlayerMovement : MonoBehaviour
         _canFire = false;
     }
 
+   
+
+    void AddExplosionForce(Rigidbody2D body, float explosionForce, Vector3 explosionPosition, float explosionRadius)
+    {
+        var dir = (body.transform.position - explosionPosition);
+        float wearoff = 1 - (dir.magnitude / explosionRadius);
+        body.AddForce(dir.normalized * explosionForce * wearoff);
+    }
+
     private void OnTriggerEnter2D(Collider2D collider2D)
     {
         if (collider2D.gameObject.layer == 8)

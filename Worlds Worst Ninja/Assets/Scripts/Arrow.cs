@@ -17,7 +17,7 @@ public class Arrow : MonoBehaviour
 
     public Vector2 dir;
 
-    private bool _hitground;
+    private bool _hitground,_hitWall;
 
     public GameObject Debris,Sound;
 

@@ -18,8 +18,8 @@ TagManager:
   - Obstacle
   - Debris
   - Player
-  - 
-  - 
+  - Enemy
+  - Explosion
   - 
   - 
   - 
