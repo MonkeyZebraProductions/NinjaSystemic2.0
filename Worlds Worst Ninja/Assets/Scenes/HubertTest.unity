@@ -1270,6 +1270,14 @@ PrefabInstance:
       propertyPath: forgetPlayerTimer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3141676383871916656, guid: e4e1a6a93d219e444a2cb0db614bc41e, type: 3}
+      propertyPath: jumpModifier
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 3141676383871916662, guid: e4e1a6a93d219e444a2cb0db614bc41e, type: 3}
+      propertyPath: m_GravityScale
+      value: 1.2
+      objectReference: {fileID: 0}
     - target: {fileID: 3141676383871916938, guid: e4e1a6a93d219e444a2cb0db614bc41e, type: 3}
       propertyPath: m_Name
       value: Enemy
