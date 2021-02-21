@@ -13,6 +13,16 @@ public class EnemyVision : MonoBehaviour
     private RaycastHit2D raycastHit;
     private Color rayColor;
 
+    private SpriteRenderer sprite;
+    private Color defaultColor;
+    public Color redColor;
+
+    private void Start()
+    {
+        sprite = GetComponentInChildren<SpriteRenderer>();
+        defaultColor = sprite.color;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!useRaycast)
@@ -20,6 +30,21 @@ public class EnemyVision : MonoBehaviour
             if (collision.tag == "Player")
             {
                 GetComponentInParent<EnemyAI>().targetPos = collision.transform;
+                GetComponentInParent<EnemyAI>().playerSeen = true;
+
+                sprite.color = redColor;
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (!useRaycast)
+        {
+            if(collision.tag == "Player")
+            {
+                sprite.color = defaultColor;
+                GetComponentInParent<EnemyAI>().playerSeen = false;
             }
         }
     }
@@ -47,10 +72,18 @@ public class EnemyVision : MonoBehaviour
             {
                 rayColor = Color.green;
                 GetComponentInParent<EnemyAI>().targetPos = raycastHit.collider.transform;
+
+                GetComponentInParent<EnemyAI>().playerSeen = true;
+
+                sprite.color = redColor;
             }
             else
             {
                 rayColor = Color.red;
+
+                GetComponentInParent<EnemyAI>().playerSeen = false;
+
+                sprite.color = defaultColor;
             }
         }
     }

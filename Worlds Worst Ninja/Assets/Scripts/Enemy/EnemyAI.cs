@@ -35,6 +35,11 @@ public class EnemyAI : MonoBehaviour
     private RaycastHit2D raycastHit;
     private float jumpDist = 1.5f;
 
+    [Header("Giving up on the player")]
+    public bool playerSeen = false;
+    public float forgetPlayerTimer = 10f;
+    private float timer;
+
     [HideInInspector] public bool goingRight = false;
 
     private void Start()
@@ -52,12 +57,29 @@ public class EnemyAI : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         InvokeRepeating("UpdatePath", 0f, pathUpdateSeconds);
+
+        timer = forgetPlayerTimer;
     }
 
     private void Update()
     {
         if (targetPos != null)
             target = targetPos.position;
+
+        if (!playerSeen)
+        {
+            timer -= Time.deltaTime;
+
+            if (timer <= 0)
+            {
+                targetPos = null;
+                timer = forgetPlayerTimer;
+            }
+        }
+        else
+        {
+            timer = forgetPlayerTimer;
+        }
     }
 
     private void FixedUpdate()
