@@ -21,6 +21,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool _isGrounded,_isJumping,_canFire;
 
+    public bool IsRightWalled, IsLeftWalled;
+
     public bool IsVisable;
 
     private float _jumpMultiplyer = 1;
@@ -36,6 +38,9 @@ public class PlayerMovement : MonoBehaviour
     public SpriteRenderer sprite;
     private Color colour;
 
+    private ContactPoint2D WallContact;
+    
+
     void Awake()
     {
         inputs = new Controls();
@@ -50,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         _rb2D = GetComponent<Rigidbody2D>();
+        
         arrow = FindObjectOfType<Arrow>();
         _jumps = MaxJumps;
         _canFire = false;
@@ -63,6 +69,8 @@ public class PlayerMovement : MonoBehaviour
         {
             _jumps = MaxJumps;
         }
+
+        Debug.Log(_jumps);
     }
 
     private void FixedUpdate()
@@ -84,8 +92,19 @@ public class PlayerMovement : MonoBehaviour
         //checks if jump button was pressed
         if (_isJumping == true)
         {
-
-            _rb2D.AddForce(new Vector2(0, JumpSpeed*_jumpMultiplyer));
+            if(IsLeftWalled)
+            {
+               _rb2D.AddForce(new Vector2(JumpSpeed * _jumpMultiplyer, JumpSpeed * _jumpMultiplyer));
+            }
+            else if (IsRightWalled)
+            {
+                _rb2D.AddForce(new Vector2(-JumpSpeed * _jumpMultiplyer, JumpSpeed * _jumpMultiplyer));
+            }
+            else
+            {
+                _rb2D.AddForce(new Vector2(0, JumpSpeed * _jumpMultiplyer));
+            }
+            
             _jumpMultiplyer *= _jumpMultiplyerRate;
             if (_jumpMultiplyer <= 0.1f)
             {
@@ -102,6 +121,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
+        if(IsRightWalled || IsLeftWalled)
+        {
+            _jumps += 1;
+        }
         if(_jumps>0)
         {
             _isJumping = true;
@@ -111,6 +134,12 @@ public class PlayerMovement : MonoBehaviour
         }
        
     }
+
+    private void CheckforWall()
+    {
+        RaycastHit2D leftWall,rightWall;
+    }
+
 
 
     //Checks if Jump button is let go
@@ -133,12 +162,6 @@ public class PlayerMovement : MonoBehaviour
 
    
 
-    void AddExplosionForce(Rigidbody2D body, float explosionForce, Vector3 explosionPosition, float explosionRadius)
-    {
-        var dir = (body.transform.position - explosionPosition);
-        float wearoff = 1 - (dir.magnitude / explosionRadius);
-        body.AddForce(dir.normalized * explosionForce * wearoff);
-    }
 
     private void OnTriggerEnter2D(Collider2D collider2D)
     {
@@ -153,14 +176,6 @@ public class PlayerMovement : MonoBehaviour
             colour = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0.5f);
             sprite.color = colour;
         }
-        //if (collider2D.gameObject.tag == "RightWall")
-        //{
-        //    _isRightWalled = true;
-        //}
-        //if (collider2D.gameObject.tag == "Left Wall")
-        //{
-        //    _isLeftWalled = true;
-        //}
     }
 
     private void OnTriggerStay2D(Collider2D collider2D)
@@ -178,7 +193,11 @@ public class PlayerMovement : MonoBehaviour
         if (collider2D.gameObject.layer == 8)
         {
             _isGrounded = false;
-            _jumps-=1;
+            if(_isJumping==false)
+            {
+                _jumps -= 1;
+            }
+            
         }
         if (collider2D.gameObject.layer == 10)
         {
@@ -186,14 +205,6 @@ public class PlayerMovement : MonoBehaviour
             colour = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 1f);
             sprite.color = colour;
         }
-        //if (collider2D.gameObject.tag == "RightWall")
-        //{
-        //    _isRightWalled = true;
-        //}
-        //if (collider2D.gameObject.tag == "Left Wall")
-        //{
-        //    _isLeftWalled = true;
-        //}
     }
     private void OnEnable()
     {

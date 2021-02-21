@@ -68,7 +68,7 @@ public class Arrow : MonoBehaviour
         _hit= Physics2D.Raycast(transform.position, dir, 10f, WhatIsGround);
 
         Debug.DrawRay(transform.position, dir, Color.green);
-        Debug.Log(_hitground);
+        
     }
 
 
