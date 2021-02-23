@@ -19,7 +19,9 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 move,look;
 
-    private bool _isGrounded,_isJumping,_canFire;
+    private bool _isGrounded,_isJumping;
+
+    public bool _canFire, _isAuto, _isFiring;
 
     public bool IsRightWalled, IsLeftWalled;
 
@@ -38,8 +40,7 @@ public class PlayerMovement : MonoBehaviour
     public SpriteRenderer sprite;
     private Color colour;
 
-    private ContactPoint2D WallContact;
-    
+    private WeaponStat _WS;
 
     void Awake()
     {
@@ -57,9 +58,13 @@ public class PlayerMovement : MonoBehaviour
         _rb2D = GetComponent<Rigidbody2D>();
         
         arrow = FindObjectOfType<Arrow>();
+        _WS = FindObjectOfType<WeaponStat>();
+
         _jumps = MaxJumps;
         _canFire = false;
+        _isFiring = false;
         colour = sprite.color;
+        
     }
 
     // Update is called once per frame
@@ -69,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         {
             _jumps = MaxJumps;
         }
-
+        _isAuto = _WS.IsAuto;
         Debug.Log(_jumps);
     }
 
@@ -88,6 +93,9 @@ public class PlayerMovement : MonoBehaviour
         
         //SelectedWeapon.transform.LookAt(LootTarget.transform, Vector2.up);
         _rb2D.velocity = new Vector2(move.x * MovementSpeed, 0);
+
+        
+
 
         //checks if jump button was pressed
         if (_isJumping == true)
@@ -113,10 +121,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Checks if holding fire button
-        if(_canFire==true)
+        if(_canFire==true && _isAuto == true)
         {
-            _rb2D.AddForce(new Vector2(arrow.dir.x, arrow.dir.y) * 50f * -1f);
+            _rb2D.AddForce(new Vector2(arrow.dir.x, arrow.dir.y) * 500f *_WS.WeaponForce* -1f);
         }
+
+
     }
 
     private void Jump()
@@ -150,16 +160,32 @@ public class PlayerMovement : MonoBehaviour
 
     private void Fire()
     {
-        _canFire = true;
-        
+        _isFiring = true;
+        if (_canFire == true && _isAuto==false)
+        {
+            _rb2D.AddForce(new Vector2(arrow.dir.x, arrow.dir.y) * 500f * -1f);
+            StartCoroutine(Reload());
+        }
+        else if (_isFiring)
+        {
+            _canFire = true;
+        }
+
     }
 
     //Checks if Fire button is let go
     private void FireCancel()
     {
         _canFire = false;
+        _isFiring = false;
     }
 
+    IEnumerator Reload()
+    {
+        _canFire = false;
+        yield return new WaitForSeconds(0.1f);
+        _canFire = true;
+    }
    
 
 

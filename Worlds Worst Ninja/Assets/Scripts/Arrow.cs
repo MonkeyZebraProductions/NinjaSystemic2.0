@@ -9,13 +9,13 @@ public class Arrow : MonoBehaviour
 
     public Transform LookTarget;
 
-    private float maxDirX, maxDirY;
+    private float maxDirX, maxDirY,maxRadius;
 
     public float angle;
 
     public LayerMask WhatIsGround;
 
-    public Vector2 dir;
+    public Vector2 dir,point;
 
     private bool _hitground,_hitWall;
 
@@ -23,65 +23,81 @@ public class Arrow : MonoBehaviour
 
     private RaycastHit2D _hit;
 
+    private bool _create;
+
+    private PlayerMovement _pm;
+
+    private WeaponStat _WS;
+
     private void Awake()
     {
         inputs = new Controls();
         inputs.Player.Fire.started += context => CreateDebris();
+        inputs.Player.Fire.canceled += context => Stop();
     }
     // Start is called before the first frame update
     void Start()
     {
-        maxDirX = 10f;
-        maxDirY = 10f;
-
+        _pm = FindObjectOfType<PlayerMovement>();
+        _WS = FindObjectOfType<WeaponStat>();
+        
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        Vector3 mousePosition = inputs.Player.Look.ReadValue<Vector2>();
+        maxRadius = _WS.WeaponRange;
+
+        Vector2 mousePosition = inputs.Player.Look.ReadValue<Vector2>();
+
+
+        Vector2 pos = Camera.main.WorldToScreenPoint(transform.position);
+        dir =  (mousePosition- pos);
+        dir.Normalize();
 
         
-        var pos = Camera.main.WorldToScreenPoint(transform.position);
-        dir =  (mousePosition- pos)*0.1f;
         
-        if(dir.y>maxDirY)
-        {
-            dir.y = maxDirY;
-        }
-        if (dir.y < -maxDirY)
-        {
-            dir.y = -maxDirY;
-        }
-        if (dir.x > maxDirX)
-        {
-            dir.x = maxDirX;
-        }
-        if (dir.x < -maxDirX)
-        {
-            dir.x = -maxDirX;
-        }
-        angle = (Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg)-90;
+        angle = (Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg)-90f;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-        _hitground = Physics2D.Raycast(transform.position, dir,10f,WhatIsGround);
-        _hit= Physics2D.Raycast(transform.position, dir, 10f, WhatIsGround);
+        _hitground = Physics2D.Raycast(transform.position, dir, maxRadius, WhatIsGround);
+        _hit= Physics2D.Raycast(transform.position, dir, maxRadius, WhatIsGround);
 
-        Debug.DrawRay(transform.position, dir, Color.green);
+        Debug.DrawRay(transform.position, dir*maxRadius, Color.green);
+        Debug.Log(point);
+        if(_create==true)
+        {
+            Instantiate(Sound, transform.position, Quaternion.identity);
+            if (_hitground == true)
+            {
+                Instantiate(Debris, _hit.point, Quaternion.identity);
+                Instantiate(Sound, _hit.point, Quaternion.identity);
+            }
+        }
         
     }
 
 
     private void CreateDebris()
     {
-        Instantiate(Sound, transform.position, Quaternion.identity);
-        if(_hitground==true)
+        if(_pm._canFire==true&&_pm._isAuto==true)
         {
-            Instantiate(Debris, _hit.point, Quaternion.identity);
-            Instantiate(Sound, _hit.point, Quaternion.identity);
+            _create = true;
         }
-        
-        
+        else if(_pm._isFiring)
+        {
+            Instantiate(Sound, transform.position, Quaternion.identity);
+            if (_hitground == true)
+            {
+                Instantiate(Debris, _hit.point, Quaternion.identity);
+                Instantiate(Sound, _hit.point, Quaternion.identity);
+            }
+        }
+    }
+
+    private void Stop()
+    {
+        _create = false;
     }
 
     private void OnEnable()
