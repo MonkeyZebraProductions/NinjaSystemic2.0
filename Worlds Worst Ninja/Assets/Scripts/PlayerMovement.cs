@@ -9,7 +9,11 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] public float MovementSpeed = 5f;
     [SerializeField] public float JumpSpeed = 5f;
+    [SerializeField] public float HangTimer = 0.1f;
     [SerializeField] public int MaxJumps = 1;
+
+    public float ExplosionMultiplier = 1;
+    public float WallJumpTimer,_wallJumpTime=1;
 
     public GameObject SelectedWeapon;
 
@@ -19,23 +23,21 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 move,look;
 
-    private bool _isGrounded,_isJumping;
+    private bool _isGrounded,_canMove,_firingSingle;
 
-    public bool _canFire, _isAuto, _isFiring;
-
-    public bool IsRightWalled, IsLeftWalled;
-
-    public bool IsVisable;
+    public bool IsRightWalled, IsLeftWalled, IsVisable, _canFire, _isAuto, _isFiring,_isExplosion, _isJumping;
 
     private float _jumpMultiplyer = 1;
 
-    private float _jumpMultiplyerRate;
+    private float _jumpMultiplyerRate,_reloadTime,_hangTime;
 
     private int _jumps;
 
     private Rigidbody2D _rb2D;
 
     private Arrow arrow;
+
+    private PhysicalExplosion Expl;
 
     public SpriteRenderer sprite;
     private Color colour;
@@ -58,13 +60,16 @@ public class PlayerMovement : MonoBehaviour
         _rb2D = GetComponent<Rigidbody2D>();
         
         arrow = FindObjectOfType<Arrow>();
-        _WS = FindObjectOfType<WeaponStat>();
+        
+        Expl = FindObjectOfType<PhysicalExplosion>();
 
         _jumps = MaxJumps;
         _canFire = false;
         _isFiring = false;
         colour = sprite.color;
-        
+        _WS = FindObjectOfType<WeaponStat>();
+        _reloadTime = _WS.ReloadTime;
+        _hangTime = HangTimer;
     }
 
     // Update is called once per frame
@@ -73,9 +78,20 @@ public class PlayerMovement : MonoBehaviour
         if (_isGrounded)
         {
             _jumps = MaxJumps;
+            _wallJumpTime = WallJumpTimer;
         }
+        _WS = FindObjectOfType<WeaponStat>();
         _isAuto = _WS.IsAuto;
-        Debug.Log(_jumps);
+        if(IsLeftWalled&&_isJumping||IsRightWalled && _isJumping)
+        {
+            _canMove = false;
+        }
+        else
+        {
+            _canMove = true;
+        }
+        Debug.Log(_firingSingle);
+        Debug.Log(_hangTime);
     }
 
     private void FixedUpdate()
@@ -92,41 +108,59 @@ public class PlayerMovement : MonoBehaviour
 
         
         //SelectedWeapon.transform.LookAt(LootTarget.transform, Vector2.up);
-        _rb2D.velocity = new Vector2(move.x * MovementSpeed, 0);
-
-        
-
+        if(_canMove)
+        {
+            _rb2D.velocity = new Vector2(move.x * MovementSpeed, 0);
+        }
 
         //checks if jump button was pressed
         if (_isJumping == true)
         {
-            if(IsLeftWalled)
+            if(IsLeftWalled && _wallJumpTime>0)
             {
-               _rb2D.AddForce(new Vector2(JumpSpeed * _jumpMultiplyer, JumpSpeed * _jumpMultiplyer));
+               _rb2D.AddForce(new Vector2(JumpSpeed/ 1.5f, JumpSpeed/2 ));
+                _wallJumpTime -= Time.deltaTime;
+                
             }
-            else if (IsRightWalled)
+            else if (IsRightWalled && _wallJumpTime > 0)
             {
-                _rb2D.AddForce(new Vector2(-JumpSpeed * _jumpMultiplyer, JumpSpeed * _jumpMultiplyer));
+                _rb2D.AddForce(new Vector2(-JumpSpeed/ 1.5f, JumpSpeed/2));
+                _wallJumpTime -= Time.deltaTime;
+                
             }
-            else
+            else if (!IsRightWalled && !IsLeftWalled)
             {
                 _rb2D.AddForce(new Vector2(0, JumpSpeed * _jumpMultiplyer));
+                _jumpMultiplyer *= _jumpMultiplyerRate;
             }
             
-            _jumpMultiplyer *= _jumpMultiplyerRate;
-            if (_jumpMultiplyer <= 0.1f)
+            
+            if (_jumpMultiplyer <= 0.1f || _wallJumpTime<=0)
             {
                 _isJumping = false;
             }
         }
 
+
         //Checks if holding fire button
         if(_canFire==true && _isAuto == true)
         {
             _rb2D.AddForce(new Vector2(arrow.dir.x, arrow.dir.y) * 500f *_WS.WeaponForce* -1f);
+            arrow.CreateDebris();
         }
-
-
+        if(_firingSingle)
+        {
+            _rb2D.AddForce(new Vector2(arrow.dir.x, arrow.dir.y) * _WS.WeaponForce * 500f * -1f);
+            _hangTime -= Time.deltaTime;
+            if (_hangTime < 0)
+            {
+                
+                _firingSingle = false;
+            }
+        }
+        
+        Reload();
+        
     }
 
     private void Jump()
@@ -145,12 +179,6 @@ public class PlayerMovement : MonoBehaviour
        
     }
 
-    private void CheckforWall()
-    {
-        RaycastHit2D leftWall,rightWall;
-    }
-
-
 
     //Checks if Jump button is let go
     private void JumpCancel()
@@ -161,15 +189,23 @@ public class PlayerMovement : MonoBehaviour
     private void Fire()
     {
         _isFiring = true;
-        if (_canFire == true && _isAuto==false)
-        {
-            _rb2D.AddForce(new Vector2(arrow.dir.x, arrow.dir.y) * 500f * -1f);
-            StartCoroutine(Reload());
-        }
-        else if (_isFiring)
+        if(_reloadTime>= _WS.ReloadTime)
         {
             _canFire = true;
         }
+        if (_canFire == true && _isAuto == false)
+        {
+            _hangTime = HangTimer;
+            _firingSingle = true;
+            arrow.CreateDebris();
+            _canFire = false;
+            _reloadTime = 0;
+        }
+        else if(_isFiring)
+        {
+            _canFire = true;
+        }
+
 
     }
 
@@ -180,13 +216,14 @@ public class PlayerMovement : MonoBehaviour
         _isFiring = false;
     }
 
-    IEnumerator Reload()
+    void Reload()
     {
-        _canFire = false;
-        yield return new WaitForSeconds(0.1f);
-        _canFire = true;
+        if(_reloadTime<_WS.ReloadTime)
+        {
+            _reloadTime += Time.deltaTime;
+        }
     }
-   
+    
 
 
     private void OnTriggerEnter2D(Collider2D collider2D)

@@ -57,6 +57,22 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Switch Left"",
+                    ""type"": ""Button"",
+                    ""id"": ""8538c1d8-8d70-400c-bce5-8f2a65176142"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Swich Right"",
+                    ""type"": ""Button"",
+                    ""id"": ""f2aa0ddb-7670-4234-9dec-757473ce94aa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -321,6 +337,50 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""11c65e87-aa8f-4cc3-8aee-391c13918a4c"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Switch Left"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ad36d0d6-b33e-4238-8fc5-8867f12ffee4"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Switch Left"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8d76b1a-b8b3-47d9-a26c-d3ad64d6ebc8"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Swich Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bf72a478-7c4f-4f6b-b6a9-69a3bc0c7358"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Swich Right"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -903,6 +963,8 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_SwitchLeft = m_Player.FindAction("Switch Left", throwIfNotFound: true);
+        m_Player_SwichRight = m_Player.FindAction("Swich Right", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -969,6 +1031,8 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_SwitchLeft;
+    private readonly InputAction m_Player_SwichRight;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -978,6 +1042,8 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @SwitchLeft => m_Wrapper.m_Player_SwitchLeft;
+        public InputAction @SwichRight => m_Wrapper.m_Player_SwichRight;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1002,6 +1068,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @SwitchLeft.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwitchLeft;
+                @SwitchLeft.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwitchLeft;
+                @SwitchLeft.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwitchLeft;
+                @SwichRight.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichRight;
+                @SwichRight.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichRight;
+                @SwichRight.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwichRight;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1021,6 +1093,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @SwitchLeft.started += instance.OnSwitchLeft;
+                @SwitchLeft.performed += instance.OnSwitchLeft;
+                @SwitchLeft.canceled += instance.OnSwitchLeft;
+                @SwichRight.started += instance.OnSwichRight;
+                @SwichRight.performed += instance.OnSwichRight;
+                @SwichRight.canceled += instance.OnSwichRight;
             }
         }
     }
@@ -1182,6 +1260,8 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnSwitchLeft(InputAction.CallbackContext context);
+        void OnSwichRight(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

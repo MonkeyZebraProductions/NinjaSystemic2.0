@@ -10,10 +10,15 @@ public class PhysicalExplosion : MonoBehaviour
     public float FOI;
 
     public LayerMask hitLayer;
+
+    public Vector2 ExplosionDirection;
+
+    private PlayerMovement _pm;
     // Start is called before the first frame update
     void Start()
     {
-        Destroy(this.gameObject, 0.5f);
+        _pm = FindObjectOfType<PlayerMovement>();
+        Destroy(this.gameObject, 0.2f);
     }
 
     // Update is called once per frame
@@ -28,9 +33,10 @@ public class PhysicalExplosion : MonoBehaviour
 
         foreach(Collider2D obj in objects)
         {
-            Vector2 dir = obj.transform.position - transform.position;
-
-            obj.GetComponent<Rigidbody2D>().AddForce(dir * force);
+            ExplosionDirection = obj.transform.position - transform.position;
+            //_pm._isExplosion = true;
+            //_pm.ExplosionMultiplier = 1;
+            obj.GetComponent<Rigidbody2D>().AddForce(ExplosionDirection * force);
         }
     }
 

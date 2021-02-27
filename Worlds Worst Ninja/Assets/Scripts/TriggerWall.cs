@@ -7,11 +7,28 @@ public class TriggerWall : MonoBehaviour
 
     private PlayerMovement _pm;
     public bool IsLeftWall;
+    private bool _hasLeftLeft,_hasLeftRight;
     // Start is called before the first frame update
 
     private void Start()
     {
         _pm = FindObjectOfType<PlayerMovement>();
+    }
+
+    private void Update()
+    {
+        Debug.Log(_hasLeftLeft);
+        
+        if(_hasLeftLeft && !_pm._isJumping)
+        {
+            _pm.IsLeftWalled = false;
+            _hasLeftLeft = false;
+        }
+        if (_hasLeftRight && !_pm._isJumping)
+        {
+            _pm.IsRightWalled = false;
+            _hasLeftRight = false;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -26,6 +43,15 @@ public class TriggerWall : MonoBehaviour
             {
                 _pm.IsRightWalled = true;
             }
+            if(_pm._isJumping==true)
+            {
+
+            }
+            else
+            {
+                _pm._wallJumpTime = _pm.WallJumpTimer;
+            }
+            
         }
         
     }
@@ -36,11 +62,11 @@ public class TriggerWall : MonoBehaviour
         {
             if (IsLeftWall)
             {
-                _pm.IsLeftWalled = false;
+                _hasLeftLeft = true;
             }
             else
             {
-                _pm.IsRightWalled = false;
+                _hasLeftRight = true;
             }
         }
         
