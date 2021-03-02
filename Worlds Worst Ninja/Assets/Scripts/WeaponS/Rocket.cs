@@ -23,7 +23,6 @@ public class Rocket : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Yo");
         if (collision.gameObject.layer==8|| collision.gameObject.layer == 9 || collision.gameObject.layer == 12)
         {
             Instantiate(Explosion, transform.position, transform.rotation);

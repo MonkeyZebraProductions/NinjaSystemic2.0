@@ -47,7 +47,7 @@ public class Arrow : MonoBehaviour
     {
         _WS = FindObjectOfType<WeaponStat>();
         maxRadius = _WS.WeaponRange;
-
+        Sound = _WS.Sound;
         Vector2 mousePosition = inputs.Player.Look.ReadValue<Vector2>();
 
 
