@@ -147,6 +147,7 @@ public class PlayerMovement : MonoBehaviour
         {
             _rb2D.AddForce(new Vector2(arrow.dir.x, arrow.dir.y) * 500f *_WS.WeaponForce* -1f);
             arrow.CreateDebris();
+            arrow.HitEnemy();
         }
         if(_firingSingle)
         {
@@ -198,6 +199,7 @@ public class PlayerMovement : MonoBehaviour
             _hangTime = HangTimer;
             _firingSingle = true;
             arrow.CreateDebris();
+            arrow.HitEnemy();
             _canFire = false;
             _reloadTime = 0;
         }
