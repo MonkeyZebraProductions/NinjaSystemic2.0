@@ -13,23 +13,21 @@ public class Arrow : MonoBehaviour
 
     public float angle;
 
-    public LayerMask WhatIsGround, WhatIsEnemy;
+    public LayerMask WhatIsGround;
 
     public Vector2 dir, point;
 
-    private bool _hitground, _hitenemy;
+    private bool _hitground, _hitWall;
 
     public GameObject Debris, Sound;
 
-    public RaycastHit2D hitGround,hitEnemy;
+    private RaycastHit2D _hit;
 
     private bool _create;
 
     private PlayerMovement _pm;
 
     private WeaponStat _WS;
-
-    private EnemyDamageAndKnockback _EDK;
 
     private void Awake()
     {
@@ -62,21 +60,15 @@ public class Arrow : MonoBehaviour
         angle = (Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-        _hitground= hitGround = Physics2D.Raycast(transform.position, dir, maxRadius, WhatIsGround);
-       
-        _hitenemy= hitEnemy=Physics2D.Raycast(transform.position, dir, maxRadius, WhatIsEnemy);
+        _hitground = Physics2D.Raycast(transform.position, dir, maxRadius, WhatIsGround);
+        _hit = Physics2D.Raycast(transform.position, dir, maxRadius, WhatIsGround);
+
         Debug.DrawRay(transform.position, dir * maxRadius, Color.green);
+
+
+
     }
 
-    public void HitEnemy()
-    {
-        if(_hitenemy)
-        {
-            _EDK = FindObjectOfType<EnemyDamageAndKnockback>();
-            _EDK.HitEnemy();
-           
-        }
-    }
 
     public void CreateDebris()
     {
@@ -84,8 +76,8 @@ public class Arrow : MonoBehaviour
         Instantiate(Sound, transform.position, Quaternion.identity);
         if (_hitground == true)
         {
-            Instantiate(Debris, hitGround.point, Quaternion.identity);
-            Instantiate(Sound, hitGround.point, Quaternion.identity);
+            Instantiate(Debris, _hit.point, Quaternion.identity);
+            Instantiate(Sound, _hit.point, Quaternion.identity);
         }
 
         if (_WS.IsExplosive)
