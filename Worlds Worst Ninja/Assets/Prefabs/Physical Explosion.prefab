@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1544840074214344724
+--- !u!1 &750223429755305476
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,41 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1544840074214344720}
-  - component: {fileID: 1544840074214344723}
-  - component: {fileID: 1544840074214344722}
-  - component: {fileID: 1544840074214344725}
-  - component: {fileID: 1544840074214344721}
-  - component: {fileID: 1544840074214344718}
-  - component: {fileID: 2240835349341902549}
+  - component: {fileID: 750223429755305472}
+  - component: {fileID: 750223429755305475}
+  - component: {fileID: 750223429755305474}
+  - component: {fileID: 750223429755305477}
+  - component: {fileID: 750223429755305473}
+  - component: {fileID: 750223429755305502}
   m_Layer: 13
-  m_Name: Physical Explosion 1
+  m_Name: Physical Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1544840074214344720
+--- !u!4 &750223429755305472
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1544840074214344724}
+  m_GameObject: {fileID: 750223429755305476}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.0314956, y: -4.821657, z: 0}
+  m_LocalPosition: {x: -12.1, y: -3.2, z: 0}
   m_LocalScale: {x: 7.6003, y: 7.6003, z: 7.6003}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &1544840074214344723
+--- !u!212 &750223429755305475
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1544840074214344724}
+  m_GameObject: {fileID: 750223429755305476}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -87,30 +86,30 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &1544840074214344722
+--- !u!58 &750223429755305474
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1544840074214344724}
-  m_Enabled: 1
+  m_GameObject: {fileID: 750223429755305476}
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 1
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.1
---- !u!50 &1544840074214344725
+--- !u!50 &750223429755305477
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1544840074214344724}
+  m_GameObject: {fileID: 750223429755305476}
   m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 1
@@ -124,13 +123,13 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1544840074214344721
+--- !u!114 &750223429755305473
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1544840074214344724}
+  m_GameObject: {fileID: 750223429755305476}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a279788de5307945b9b22b043173d3e, type: 3}
@@ -141,15 +140,14 @@ MonoBehaviour:
   hitLayer:
     serializedVersion: 2
     m_Bits: 2048
-  ExplosionDirection: {x: 0, y: 0}
---- !u!95 &1544840074214344718
+--- !u!95 &750223429755305502
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1544840074214344724}
+  m_GameObject: {fileID: 750223429755305476}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 26aa174b84ecf0148aabed5146ca9373, type: 2}
@@ -161,23 +159,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!250 &2240835349341902549
-PointEffector2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1544840074214344724}
-  m_Enabled: 1
-  m_UseColliderMask: 1
-  m_ColliderMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  m_ForceMagnitude: 25000
-  m_ForceVariation: 0
-  m_DistanceScale: 0.1
-  m_ForceSource: 1
-  m_ForceTarget: 0
-  m_ForceMode: 2
-  m_Drag: 0
-  m_AngularDrag: 0

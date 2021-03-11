@@ -45,7 +45,7 @@ public class TriggerWall : MonoBehaviour
             }
             if(_pm._isJumping==true)
             {
-                _pm._wallJumpTime = 0;
+
             }
             else
             {
@@ -54,30 +54,6 @@ public class TriggerWall : MonoBehaviour
             
         }
         
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.gameObject.layer == 9)
-        {
-            if (IsLeftWall)
-            {
-                _pm.IsLeftWalled = true;
-            }
-            else
-            {
-                _pm.IsRightWalled = true;
-            }
-            if (_pm._isJumping == true)
-            {
-               // _pm._wallJumpTime = 0;
-            }
-            else
-            {
-                _pm._wallJumpTime = _pm.WallJumpTimer;
-            }
-
-        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
